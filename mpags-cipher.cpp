@@ -6,11 +6,12 @@
 // For std::isalpha and std::isupper
 #include <cctype>
 
-    std::string transformChar (const char inputChar) { 
+std::string transformChar (const char inputChar) { 
     // Uppercase alphabetic characters
-      std::string inputText
+  std::string inputText;
     if (std::isalpha(inputChar)) {
-      inputText += std::toupper(inputChar);};
+      inputText += std::toupper(inputChar);
+    }
 
     // Transliterate digits to English words
     else{
@@ -160,7 +161,7 @@ int main(int argc, char* argv[])
   // (until Return then CTRL-D (EOF) pressed)
   while(std::cin >> inputChar)
     {
-      inputText = transformChar(inputText);
+      inputText = transformChar(inputChar);
     }
 
   // Output the transliterated text
