@@ -6,8 +6,7 @@
 // For std::isalpha and std::isupper
 #include <cctype>
 
-// Transliterate char to string
-std::string TransformChar(const char inputChar);
+#include "TransformChar.hpp"
 
 // Main function of the mpags-cipher program
 int main(int argc, char* argv[])
