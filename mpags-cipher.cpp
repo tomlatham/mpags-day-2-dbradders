@@ -60,7 +60,7 @@ std::string transformChar (const char inputChar){
 bool processCommandLine(
 			const std::vector<std::string>& args,
 			bool& helpRequested,
-			bool& versionRequested
+			bool& versionRequested,
 			std::string& inputFileName,
 			std::string& outputFileName )
 {
@@ -124,7 +124,13 @@ int main(int argc, char* argv[])
   // Convert the command-line arguments into a more easily usable form
   const std::vector<std::string> cmdLineArgs {argv, argv+argc};
 
+  //Declare arguments in main scope
 
+  bool helpRequested {false};
+  bool versionRequested {false};
+  std::string inputFile {""};
+  std::string outputFile {""};
+  
   //Perform processCommand first
   processCommandLine(cmdLineArgs, helpRequested, versionRequested, inputFile, outputFile);
   
