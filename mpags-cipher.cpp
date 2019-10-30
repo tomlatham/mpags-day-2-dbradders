@@ -6,6 +6,9 @@
 // For std::isalpha and std::isupper
 #include <cctype>
 
+// Include fstream to deal with input/output file stream
+#include <fstream>
+
 // Include function hpp files
 #include "TransformChar.hpp"
 #include "ProcessCommandLine.hpp"
@@ -25,8 +28,7 @@ int main(int argc, char* argv[])
   
   //Perform processCommand first
   processCommandLine(cmdLineArgs, helpRequested, versionRequested, inputFile, outputFile);
-  
- 
+   
   // Handle help, if requested
   if (helpRequested) {
     // Line splitting for readability
@@ -57,28 +59,70 @@ int main(int argc, char* argv[])
   char inputChar {'x'};
   std::string inputText {""};
 
+  // Check file was correctly opened
+  bool ok_to_read{false};
+  bool ok_to_write{false};
+
+
+  
   // Read in user input from stdin/file
   // Warn that input file option not yet implemented
   if (!inputFile.empty()) {
     std::cout << "[warning] input from file ('"
               << inputFile
               << "') not implemented yet, using stdin\n";
+
+    // Initialise input from file
+    std::ifstream in_file {inputFile};
+
+    // Returns true if input file was correctly opened
+    ok_to_read = in_file.good();
   }
+
+  // If ok_to_read true
+  if (ok_to_read)
+    {
+      // Initialise ifstream type
+      std::string name{inputFile};
+      std::ifstream in_file{name};
 
   // Loop over each character from user input
   // (until Return then CTRL-D (EOF) pressed)
-  while(std::cin >> inputChar)
+      while(in_file >> inputChar)
   {
+    // Print input characters from file then transliterate text
+    std::cout << inputChar << std::endl;
     inputText += transformChar(inputChar);
   }
-
-
+    }
+  // Also need to deal with keyboard input text
+  else {
+   while(std::cin >> inputChar)
+     {inputText += transformChar(inputChar);
+     }
+  }
+     
+	  
   // Output the transliterated text
   // Warn that output file option not yet implemented
   if (!outputFile.empty()) {
     std::cout << "[warning] output to file ('"
               << outputFile
               << "') not implemented yet, using stdout\n";
+
+    // Initialise output to file
+    std::string name{outputFile};
+    std::ofstream out_file{name};
+    
+    ok_to_read = out_file.good();
+
+    if(ok_to_write){
+      out_file << inputText;
+    }
+    else{
+      std::cout << "\n" << "[Error]:Cannot write to outfile since empty";
+    }
+    
   }
 
   std::cout << "\n" << inputText << std::endl;
