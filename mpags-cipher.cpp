@@ -12,6 +12,7 @@
 // Include function hpp files
 #include "TransformChar.hpp"
 #include "ProcessCommandLine.hpp"
+#include "RunCaesarCipher.hpp"
 
 // Main function of the mpags-cipher program
 int main(int argc, char* argv[])
@@ -25,7 +26,8 @@ int main(int argc, char* argv[])
   bool versionRequested {false};
   std::string inputFile {""};
   std::string outputFile {""};
-  
+  // Declare new string which is generated after Caesar Cipher
+  std::string outputText {""};
   //Perform processCommand first
   processCommandLine(cmdLineArgs, helpRequested, versionRequested, inputFile, outputFile);
    
@@ -63,8 +65,6 @@ int main(int argc, char* argv[])
   bool ok_to_read{false};
   bool ok_to_write{false};
 
-
-  
   // Read in user input from stdin/file
   // Warn that input file option not yet implemented
   if (!inputFile.empty()) {
@@ -93,12 +93,16 @@ int main(int argc, char* argv[])
     // Print input characters from file then transliterate text
     std::cout << inputChar << std::endl;
     inputText += transformChar(inputChar);
+    // Perform Caesar Cipher
+    outputText == runCaesarCipher(inputText);
   }
     }
   // Also need to deal with keyboard input text
   else {
    while(std::cin >> inputChar)
      {inputText += transformChar(inputChar);
+       // Persform Caesar Cipher
+       outputText == runCaesarCipher(inputText);
      }
   }
      
@@ -117,7 +121,8 @@ int main(int argc, char* argv[])
     ok_to_read = out_file.good();
 
     if(ok_to_write){
-      out_file << inputText;
+      // Now use output text since now have performed Caesar Cipher
+      out_file << outputText;
     }
     else{
       std::cout << "\n" << "[Error]:Cannot write to outfile since empty";
@@ -125,7 +130,8 @@ int main(int argc, char* argv[])
     
   }
 
-  std::cout << "\n" << inputText << std::endl;
+  //Print outputText instead
+  std::cout << "\n" << outputText << std::endl;
 
   // No requirement to return from main, but we do so for clarity
   // and for consistency with other functions
