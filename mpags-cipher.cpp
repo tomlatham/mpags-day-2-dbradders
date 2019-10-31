@@ -26,10 +26,13 @@ int main(int argc, char* argv[])
   bool versionRequested {false};
   std::string inputFile {""};
   std::string outputFile {""};
-  // Declare new string which is generated after Caesar Cipher
-  std::string outputText {""};
+
   //Perform processCommand first
-  processCommandLine(cmdLineArgs, helpRequested, versionRequested, inputFile, outputFile);
+  const bool processedOK { processCommandLine(cmdLineArgs, helpRequested, versionRequested, inputFile, outputFile) };
+  if ( ! processedOK ) {
+    std::cerr << "Problem processing command line arguments" << std::endl;
+    return 1;
+  }
    
   // Handle help, if requested
   if (helpRequested) {
@@ -66,72 +69,62 @@ int main(int argc, char* argv[])
   bool ok_to_write{false};
 
   // Read in user input from stdin/file
-  // Warn that input file option not yet implemented
+  std::ifstream in_file {};
   if (!inputFile.empty()) {
-    std::cout << "[warning] input from file ('"
-              << inputFile
-              << "') not implemented yet, using stdin\n";
-
     // Initialise input from file
-    std::ifstream in_file {inputFile};
+    in_file.open(inputFile);
 
     // Returns true if input file was correctly opened
     ok_to_read = in_file.good();
+    if ( ! ok_to_read ) {
+      std::cerr << "[error] problem reading from file: " << inputFile << std::endl;
+    }
   }
 
   // If ok_to_read true
   if (ok_to_read)
     {
-      // Initialise ifstream type
-      std::string name{inputFile};
-      std::ifstream in_file{name};
-
   // Loop over each character from user input
   // (until Return then CTRL-D (EOF) pressed)
       while(in_file >> inputChar)
   {
     // Print input characters from file then transliterate text
-    std::cout << inputChar << std::endl;
     inputText += transformChar(inputChar);
-    // Perform Caesar Cipher
-    outputText == runCaesarCipher(inputText);
   }
     }
   // Also need to deal with keyboard input text
   else {
    while(std::cin >> inputChar)
-     {inputText += transformChar(inputChar);
-       // Persform Caesar Cipher
-       outputText == runCaesarCipher(inputText);
+     {
+       inputText += transformChar(inputChar);
      }
   }
      
-	  
+  // Perform Caesar Cipher
+  std::string outputText { runCaesarCipher(inputText, 1, false) };
+
   // Output the transliterated text
   // Warn that output file option not yet implemented
+  std::ofstream out_file{};
   if (!outputFile.empty()) {
-    std::cout << "[warning] output to file ('"
-              << outputFile
-              << "') not implemented yet, using stdout\n";
-
     // Initialise output to file
-    std::string name{outputFile};
-    std::ofstream out_file{name};
+    out_file.open(outputFile);
     
-    ok_to_read = out_file.good();
+    ok_to_write = out_file.good();
+    if ( ! ok_to_write ) {
+      std::cerr << "[error] problem writing to file: " << outputFile << std::endl;
+    }
+  }
 
     if(ok_to_write){
       // Now use output text since now have performed Caesar Cipher
       out_file << outputText;
     }
     else{
-      std::cout << "\n" << "[Error]:Cannot write to outfile since empty";
+      std::cout << outputText << std::endl;
     }
     
-  }
-
   //Print outputText instead
-  std::cout << "\n" << outputText << std::endl;
 
   // No requirement to return from main, but we do so for clarity
   // and for consistency with other functions

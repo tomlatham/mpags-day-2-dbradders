@@ -13,20 +13,34 @@ std::string runCaesarCipher(const std::string& inputText,
 			    const size_t key, const bool encrypt)
 {
   // Create the alphabet container and output string
-  std::string outputText{""};
-  int nText = inputText.size();
-  size_t n{key};
+  const std::string alphabet{"ABCDEFGHIJKLMNOPQRSTUVWXYZ"};
+  const std::string::size_type alphabetSize {alphabet.size()};
 
+  std::string outputText{""};
+
+  // Truncate the key to the range 0 - 25
+  size_t shift{key % alphabetSize};
   if (encrypt == false)
-    {n = 0 - key;}
+    {
+      shift = alphabetSize - shift;
+    }
+
+  // Or, in one line, which also allows the variable to be declared const:
+  // const size_t shift{ encrypt ? key % alphabetSize : alphabetSize - (key % alphabetSize) };
 
   // Loop over the input text
 
-  for (int i{0}; i<nText; i++)
+  for ( char inChar : inputText )
+  {
+    for (std::string::size_type i{0}; i<alphabetSize; i++)
     {
-      // Determine the new character and add to output string
-      outputText += char(65+(int((inputText[i])-65-n))%26);
+      if ( inChar == alphabet[i] ) {
+        // Determine the new character and add to output string
+        outputText += alphabet[(i + shift) % alphabetSize];
+        break;
+      }
     }
+  }
   // Return output string
   return outputText;
 }

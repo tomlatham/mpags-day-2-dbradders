@@ -34,6 +34,7 @@ bool processCommandLine(
       // Next element is filename unless -i is the last argument
       if (i == nargs-1) {
 	std::cerr << "[error] -i requires a filename argument" << std::endl;
+  return false;
 	// exit main with non-zero return to indicate failure
 
       }
@@ -48,6 +49,7 @@ bool processCommandLine(
       // Next element is filename unless -o is the last argument
       if (i == nargs-1) {
 	std::cerr << "[error] -o requires a filename argument" << std::endl;
+  return false;
 	// exit main with non-zero return to indicate failure
 
       }
@@ -61,10 +63,10 @@ bool processCommandLine(
       // Have an unknown flag to output error message and return non-zero
       // exit status to indicate failure
       std::cerr << "[error] unknown argument '" << args[i] << "'\n";
-      return 1;
+      return false;
     }
   }
 
-  return 0;
+  return true;
 }
 
